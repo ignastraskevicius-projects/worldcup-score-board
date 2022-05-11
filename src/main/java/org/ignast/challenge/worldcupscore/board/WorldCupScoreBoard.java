@@ -9,15 +9,20 @@ import lombok.val;
 
 public final class WorldCupScoreBoard {
 
-    private ArrayList<Game> gamesInProgress = new ArrayList<>();
+    private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING_AND_CREATION_ORDER = Comparator
+        .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
+        .reversed()
+        .thenComparing(Game::getCreationOrder);
+
+    private final SortedArraySet<Game> gamesInProgress = new SortedArraySet<>(
+        BY_TOTAL_SCORE_DESCENDING_AND_CREATION_ORDER
+    );
 
     private final Game.Factory games = new Game.Factory();
 
     public void startGame(final Home homeTeam, final Away awayTeam) {
         val gameToBeAdded = games.create(homeTeam, awayTeam);
-        if (!gamesInProgress.contains(gameToBeAdded)) {
-            gamesInProgress.add(getIndexForInsertionPreservingOrder(gameToBeAdded), gameToBeAdded);
-        } else {
+        if (!gamesInProgress.add(gameToBeAdded)) {
             throw new IllegalArgumentException(
                 String.format(
                     "%s-%s game has already in progress and cannot be started",
@@ -29,9 +34,7 @@ public final class WorldCupScoreBoard {
     }
 
     public void finishGame(final Home homeTeam, final Away awayTeam) {
-        if (gamesInProgress.contains(games.create(homeTeam, awayTeam))) {
-            gamesInProgress.remove(games.create(homeTeam, awayTeam));
-        } else {
+        if (!gamesInProgress.remove(games.create(homeTeam, awayTeam))) {
             throw new IllegalStateException(
                 String.format(
                     "%s-%s game is not in progress and cannot be finished",
@@ -58,7 +61,7 @@ public final class WorldCupScoreBoard {
             .ifPresentOrElse(
                 updatedGame -> {
                     gamesInProgress.remove(updatedGame);
-                    gamesInProgress.add(getIndexForInsertionPreservingOrder(updatedGame), updatedGame);
+                    gamesInProgress.add(updatedGame);
                 },
                 () -> {
                     throw new IllegalArgumentException(
@@ -70,20 +73,5 @@ public final class WorldCupScoreBoard {
                     );
                 }
             );
-    }
-
-    private int getIndexForInsertionPreservingOrder(Game gameToBeAdded) {
-        val byTotalScoreDescendingAndCreationOrder = Comparator
-            .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
-            .reversed()
-            .thenComparing(Game::getCreationOrder);
-
-        val index = Collections.binarySearch(
-            gamesInProgress,
-            gameToBeAdded,
-            byTotalScoreDescendingAndCreationOrder
-        );
-        int fromBinarySearchNotFoundToIndex = -(index) - 1;
-        return index >= 0 ? index : fromBinarySearchNotFoundToIndex;
     }
 }
