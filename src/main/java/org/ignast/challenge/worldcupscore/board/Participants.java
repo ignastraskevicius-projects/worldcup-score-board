@@ -1,3 +1,5 @@
 package org.ignast.challenge.worldcupscore.board;
 
-public record Participants(Home homeTeam, Away awayTeam) {}
+import lombok.NonNull;
+
+public record Participants(@NonNull Home homeTeam, @NonNull Away awayTeam) {}

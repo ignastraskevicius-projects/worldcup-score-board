@@ -1,3 +1,5 @@
 package org.ignast.challenge.worldcupscore.board;
 
-public record Home(String name) {}
+import lombok.NonNull;
+
+public record Home(@NonNull String name) {}

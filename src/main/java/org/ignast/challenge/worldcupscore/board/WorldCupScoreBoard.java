@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.val;
 
-public class WorldCupScoreBoard {
+public final class WorldCupScoreBoard {
 
     private ArrayList<Game> gamesInProgress = new ArrayList<>();
 
@@ -16,7 +16,7 @@ public class WorldCupScoreBoard {
     public void startGame(final Home homeTeam, final Away awayTeam) {
         val gameToBeAdded = games.create(homeTeam, awayTeam);
         if (!gamesInProgress.contains(gameToBeAdded)) {
-            gamesInProgress.add(getIndexPreservingOrder(gameToBeAdded), gameToBeAdded);
+            gamesInProgress.add(getIndexForInsertionPreservingOrder(gameToBeAdded), gameToBeAdded);
         } else {
             throw new IllegalArgumentException(
                 String.format(
@@ -47,17 +47,18 @@ public class WorldCupScoreBoard {
     }
 
     public void updateScore(final PairScore pairScore) {
-        val gameWithNewScore = pairScore.toGame();
+        val gameToUpdate = pairScore.toGame();
+        val newScore = gameToUpdate.getScorePair();
 
         gamesInProgress
             .stream()
-            .filter(g -> g.equals(gameWithNewScore))
-            .map(g -> g.updateScore(gameWithNewScore.getScorePair()))
+            .filter(g -> g.equals(gameToUpdate))
+            .map(g -> g.updateScore(newScore))
             .findFirst()
             .ifPresentOrElse(
                 updatedGame -> {
                     gamesInProgress.remove(updatedGame);
-                    gamesInProgress.add(getIndexPreservingOrder(updatedGame), updatedGame);
+                    gamesInProgress.add(getIndexForInsertionPreservingOrder(updatedGame), updatedGame);
                 },
                 () -> {
                     throw new IllegalArgumentException(
@@ -71,7 +72,7 @@ public class WorldCupScoreBoard {
             );
     }
 
-    private int getIndexPreservingOrder(Game gameToBeAdded) {
+    private int getIndexForInsertionPreservingOrder(Game gameToBeAdded) {
         val byTotalScoreDescendingAndCreationOrder = Comparator
             .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
             .reversed()
