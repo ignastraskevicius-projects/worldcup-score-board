@@ -3,14 +3,15 @@ package org.ignast.challenge.worldcupscore.board;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.val;
 
 public class WorldCupScoreBoard {
 
-    private PairScore pairScore;
+    private Game game;
 
     public void startGame(final Home homeTeam, final Away awayTeam) {
-        if (pairScore == null) {
-            pairScore = new PairScore(homeTeam, 0, awayTeam, 0);
+        if (game == null) {
+            game = new Game(new Participants(homeTeam, awayTeam), 0, 0);
         } else {
             throw new IllegalArgumentException(
                 String.format(
@@ -23,7 +24,7 @@ public class WorldCupScoreBoard {
     }
 
     public void finishGame(final Home homeTeam, final Away awayTeam) {
-        if (Objects.isNull(pairScore)) {
+        if (Objects.isNull(game)) {
             throw new IllegalStateException(
                 String.format(
                     "%s-%s game is not in progress and cannot be finished",
@@ -32,24 +33,22 @@ public class WorldCupScoreBoard {
                 )
             );
         } else {
-            pairScore = null;
+            game = null;
         }
     }
 
     public List<PairScore> getSummary() {
-        if (pairScore != null) {
-            return List.of(pairScore);
+        if (game != null) {
+            return List.of(PairScore.fromGame(game));
         } else {
             return new ArrayList<>();
         }
     }
 
     public void updateScore(final PairScore pairScore) {
-        if (
-            Objects.equals(pairScore.homeTeam(), this.pairScore.homeTeam()) &&
-            Objects.equals(pairScore.awayTeam(), this.pairScore.awayTeam())
-        ) {
-            this.pairScore = pairScore;
+        val gameToUpdate = pairScore.toGame();
+        if (game.equals(gameToUpdate)) {
+            this.game = gameToUpdate;
         } else {
             throw new IllegalArgumentException(
                 String.format(
