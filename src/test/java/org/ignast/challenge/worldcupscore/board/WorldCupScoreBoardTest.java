@@ -75,6 +75,14 @@ class WorldCupScoreBoardTest {
     }
 
     @Test
+    public void shouldNotAllowToFinishNotExistentGameWhenThereAreUnrelatedGamesInProgress() {
+        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
+                .withMessage("Mexico-Canada game is not in progress and cannot be finished");
+    }
+
+    @Test
     public void startedGameShouldBeAbleToGetItsScoreChanged() {
         worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
         worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));

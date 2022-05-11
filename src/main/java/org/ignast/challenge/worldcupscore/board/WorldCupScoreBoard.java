@@ -35,7 +35,7 @@ public class WorldCupScoreBoard {
     }
 
     public void finishGame(final Home homeTeam, final Away awayTeam) {
-        if (gamesInProgress.isEmpty()) {
+        if (!gamesInProgress.contains(new Game(new Participants(homeTeam, awayTeam), 0, 0))) {
             throw new IllegalStateException(
                 String.format(
                     "%s-%s game is not in progress and cannot be finished",
