@@ -8,7 +8,7 @@ public class WorldCupScoreBoard {
 
     private PairScore pairScore;
 
-    public void startGame(Home homeTeam, Away awayTeam) {
+    public void startGame(final Home homeTeam, final Away awayTeam) {
         if (pairScore == null) {
             pairScore = new PairScore(homeTeam, 0, awayTeam, 0);
         } else {
@@ -22,7 +22,7 @@ public class WorldCupScoreBoard {
         }
     }
 
-    public void finishGame(Home homeTeam, Away awayTeam) {
+    public void finishGame(final Home homeTeam, final Away awayTeam) {
         if (Objects.isNull(pairScore)) {
             throw new IllegalStateException(
                 String.format(
@@ -42,5 +42,9 @@ public class WorldCupScoreBoard {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    public void updateScore(final PairScore pairScore) {
+        this.pairScore = pairScore;
     }
 }
