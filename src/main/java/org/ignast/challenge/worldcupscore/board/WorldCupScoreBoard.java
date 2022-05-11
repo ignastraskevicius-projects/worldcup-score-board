@@ -21,25 +21,13 @@ public final class WorldCupScoreBoard {
     public void startGame(final HomeTeam homeTeam, final AwayTeam awayTeam) {
         val gameToBeAdded = games.create(homeTeam, awayTeam);
         if (!gamesInProgress.add(gameToBeAdded)) {
-            throw new IllegalArgumentException(
-                String.format(
-                    "%s-%s game has already in progress and cannot be started",
-                    homeTeam.name(),
-                    awayTeam.name()
-                )
-            );
+            throw gameIsAlreadyStartedError(homeTeam, awayTeam);
         }
     }
 
     public void finishGame(final HomeTeam homeTeam, final AwayTeam awayTeam) {
         if (!gamesInProgress.remove(games.create(homeTeam, awayTeam))) {
-            throw new IllegalStateException(
-                String.format(
-                    "%s-%s game is not in progress and cannot be finished",
-                    homeTeam.name(),
-                    awayTeam.name()
-                )
-            );
+            throw gameNotFoundError(homeTeam, awayTeam);
         }
     }
 
@@ -62,14 +50,20 @@ public final class WorldCupScoreBoard {
                     gamesInProgress.add(updatedGame);
                 },
                 () -> {
-                    throw new IllegalArgumentException(
-                        String.format(
-                            "%s-%s game is not in progress and cannot have its score updated",
-                            pairScore.homeTeam().name(),
-                            pairScore.awayTeam().name()
-                        )
-                    );
+                    throw gameNotFoundError(pairScore.homeTeam(), pairScore.awayTeam());
                 }
             );
+    }
+
+    private IllegalArgumentException gameIsAlreadyStartedError(HomeTeam homeTeam, AwayTeam awayTeam) {
+        return new IllegalArgumentException(
+            String.format("%s-%s game has already started", homeTeam.name(), awayTeam.name())
+        );
+    }
+
+    private IllegalArgumentException gameNotFoundError(HomeTeam homeTeam, AwayTeam awayTeam) {
+        return new IllegalArgumentException(
+            String.format("%s-%s game was not found", homeTeam.name(), awayTeam.name())
+        );
     }
 }
