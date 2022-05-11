@@ -17,4 +17,8 @@ final class Game {
 
     private final int homeScore;
     private final int awayScore;
+
+    public static Game create(final Home homeTeam, final Away awayTeam) {
+        return new Game(new Participants(homeTeam, awayTeam), 0, 0);
+    }
 }

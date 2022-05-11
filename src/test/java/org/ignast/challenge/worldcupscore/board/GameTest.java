@@ -39,4 +39,10 @@ class GameTest {
         assertThat(game.getHomeScore()).isEqualTo(1);
         assertThat(game.getAwayScore()).isEqualTo(2);
     }
+
+    @Test
+    public void shouldCreateNewGame() {
+        assertThat(Game.create(new Home("Canada"), new Away("Spain")))
+            .isEqualTo(new Game(new Participants(new Home("Canada"), new Away("Spain")), 0, 0));
+    }
 }
