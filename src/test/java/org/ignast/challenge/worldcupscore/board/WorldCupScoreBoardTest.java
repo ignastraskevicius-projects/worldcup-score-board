@@ -63,6 +63,18 @@ class WorldCupScoreBoardTest {
     }
 
     @Test
+    public void shouldContinueSummarisingGamesInProgressAfterSomeOfThemFinish() {
+        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
+        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
+        worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada"));
+
+        val summary = worldCupScoreBoard.getSummary();
+
+        assertThat(summary).hasSize(1);
+        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Spain"), 0, new Away("Italy"), 0));
+    }
+
+    @Test
     public void startedGameShouldBeAbleToGetItsScoreChanged() {
         worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
         worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
