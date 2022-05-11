@@ -44,6 +44,19 @@ class GameTest {
     }
 
     @Test
+    public void gameShouldUpdateScore() {
+        val game = new Game(new Participants(new Home("Canada"), new Away("Spain")), new ScorePair(1, 2), 3);
+
+        val updatedGame = game.updateScore(new ScorePair(2, 4));
+
+        assertThat(updatedGame.getParticipants())
+            .isEqualTo(new Participants(new Home("Canada"), new Away("Spain")));
+        assertThat(updatedGame.getScorePair().home()).isEqualTo(2);
+        assertThat(updatedGame.getScorePair().away()).isEqualTo(4);
+        assertThat(updatedGame.getCreationOrder()).isEqualTo(3);
+    }
+
+    @Test
     public void factoryShouldCreateNewGame() {
         assertThat(new Game.Factory().create(new Home("Canada"), new Away("Spain")))
             .isEqualTo(

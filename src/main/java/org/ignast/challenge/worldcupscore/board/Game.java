@@ -20,6 +20,10 @@ final class Game {
 
     private final int creationOrder;
 
+    public Game updateScore(ScorePair newScore) {
+        return new Game(participants, newScore, creationOrder);
+    }
+
     static class Factory {
 
         private int creationOrder = 0;

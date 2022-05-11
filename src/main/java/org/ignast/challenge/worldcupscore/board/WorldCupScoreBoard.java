@@ -11,7 +11,9 @@ public class WorldCupScoreBoard {
 
     private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING = Comparator
         .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
-        .reversed();
+        .reversed()
+        .thenComparing(Game::getCreationOrder);
+
     private ArrayList<Game> gamesInProgress = new ArrayList<>();
 
     private final Game.Factory games = new Game.Factory();
@@ -55,19 +57,27 @@ public class WorldCupScoreBoard {
     }
 
     public void updateScore(final PairScore pairScore) {
-        val gameToUpdate = pairScore.toGame();
+        val gameWithNewScore = pairScore.toGame();
 
-        if (gamesInProgress.contains(gameToUpdate)) {
-            gamesInProgress.remove(gameToUpdate);
-            gamesInProgress.add(getIndexPreservingOrder(gameToUpdate), gameToUpdate);
-        } else {
-            throw new IllegalArgumentException(
-                String.format(
-                    "%s-%s game is not in progress and cannot have its score updated",
-                    pairScore.homeTeam().name(),
-                    pairScore.awayTeam().name()
-                )
+        gamesInProgress
+            .stream()
+            .filter(g -> g.equals(gameWithNewScore))
+            .map(g -> g.updateScore(gameWithNewScore.getScorePair()))
+            .findFirst()
+            .ifPresentOrElse(
+                updatedGame -> {
+                    gamesInProgress.remove(updatedGame);
+                    gamesInProgress.add(getIndexPreservingOrder(updatedGame), updatedGame);
+                },
+                () -> {
+                    throw new IllegalArgumentException(
+                        String.format(
+                            "%s-%s game is not in progress and cannot have its score updated",
+                            pairScore.homeTeam().name(),
+                            pairScore.awayTeam().name()
+                        )
+                    );
+                }
             );
-        }
     }
 }
