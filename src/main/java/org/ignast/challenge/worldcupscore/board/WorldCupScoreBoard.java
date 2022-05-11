@@ -8,7 +8,7 @@ import lombok.val;
 public final class WorldCupScoreBoard {
 
     private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING_AND_LATEST_CREATED_FIRST = Comparator
-        .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
+        .<Game, Integer>comparing(g -> g.getScorePair().totalScore())
         .thenComparing(Game::getCreationOrder)
         .reversed();
 
