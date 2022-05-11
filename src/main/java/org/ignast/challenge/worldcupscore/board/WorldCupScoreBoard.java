@@ -1,17 +1,23 @@
 package org.ignast.challenge.worldcupscore.board;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.val;
 
 public class WorldCupScoreBoard {
 
-    private Game game;
+    private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING = Comparator
+        .<Game, Integer>comparing(g -> g.getHomeScore() + g.getAwayScore())
+        .reversed();
+    private ArrayList<Game> gamesInProgress = new ArrayList<>();
 
     public void startGame(final Home homeTeam, final Away awayTeam) {
-        if (game == null) {
-            game = new Game(new Participants(homeTeam, awayTeam), 0, 0);
+        val gameToBeAdded = new Game(new Participants(homeTeam, awayTeam), 0, 0);
+        if (!gamesInProgress.contains(gameToBeAdded)) {
+            gamesInProgress.add(getIndexPreservingOrder(gameToBeAdded), gameToBeAdded);
         } else {
             throw new IllegalArgumentException(
                 String.format(
@@ -23,8 +29,14 @@ public class WorldCupScoreBoard {
         }
     }
 
+    private int getIndexPreservingOrder(Game gameToBeAdded) {
+        val index = Collections.binarySearch(gamesInProgress, gameToBeAdded, BY_TOTAL_SCORE_DESCENDING);
+        int index1 = -(index) - 1;
+        return index1;
+    }
+
     public void finishGame(final Home homeTeam, final Away awayTeam) {
-        if (Objects.isNull(game)) {
+        if (gamesInProgress.isEmpty()) {
             throw new IllegalStateException(
                 String.format(
                     "%s-%s game is not in progress and cannot be finished",
@@ -33,22 +45,20 @@ public class WorldCupScoreBoard {
                 )
             );
         } else {
-            game = null;
+            gamesInProgress = new ArrayList<>();
         }
     }
 
     public List<PairScore> getSummary() {
-        if (game != null) {
-            return List.of(PairScore.fromGame(game));
-        } else {
-            return new ArrayList<>();
-        }
+        return gamesInProgress.stream().map(PairScore::fromGame).collect(Collectors.toList());
     }
 
     public void updateScore(final PairScore pairScore) {
         val gameToUpdate = pairScore.toGame();
-        if (game.equals(gameToUpdate)) {
-            this.game = gameToUpdate;
+
+        if (gamesInProgress.contains(gameToUpdate)) {
+            gamesInProgress.remove(gameToUpdate);
+            gamesInProgress.add(getIndexPreservingOrder(gameToUpdate), gameToUpdate);
         } else {
             throw new IllegalArgumentException(
                 String.format(
