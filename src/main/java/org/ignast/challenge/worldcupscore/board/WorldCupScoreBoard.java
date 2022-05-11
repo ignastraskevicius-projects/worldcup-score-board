@@ -2,6 +2,7 @@ package org.ignast.challenge.worldcupscore.board;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WorldCupScoreBoard {
 
@@ -13,16 +14,26 @@ public class WorldCupScoreBoard {
         } else {
             throw new IllegalArgumentException(
                 String.format(
-                    "%s-%s game has already started",
+                    "%s-%s game has already in progress and cannot be started",
                     pairScore.homeTeam().name(),
-                    pairScore.awayTeam().country()
+                    pairScore.awayTeam().name()
                 )
             );
         }
     }
 
     public void finishGame(Home homeTeam, Away awayTeam) {
-        pairScore = null;
+        if (Objects.isNull(pairScore)) {
+            throw new IllegalStateException(
+                String.format(
+                    "%s-%s game is not in progress and cannot be finished",
+                    homeTeam.name(),
+                    awayTeam.name()
+                )
+            );
+        } else {
+            pairScore = null;
+        }
     }
 
     public List<PairScore> getSummary() {
