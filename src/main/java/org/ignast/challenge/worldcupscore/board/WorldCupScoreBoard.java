@@ -10,7 +10,7 @@ import lombok.val;
 public class WorldCupScoreBoard {
 
     private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING = Comparator
-        .<Game, Integer>comparing(g -> g.getHomeScore() + g.getAwayScore())
+        .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
         .reversed();
     private ArrayList<Game> gamesInProgress = new ArrayList<>();
 

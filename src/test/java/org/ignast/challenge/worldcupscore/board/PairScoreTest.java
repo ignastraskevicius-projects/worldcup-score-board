@@ -22,12 +22,14 @@ class PairScoreTest {
         val game = pairScore.toGame();
 
         assertThat(game)
-            .isEqualTo(new Game(new Participants(new Home("Canada"), new Away("Mexico")), 0, 1, 0));
+            .isEqualTo(
+                new Game(new Participants(new Home("Canada"), new Away("Mexico")), new ScorePair(0, 1), 0)
+            );
     }
 
     @Test
     public void shouldExtractScoreFromGame() {
-        val game = new Game(new Participants(new Home("Canada"), new Away("Mexico")), 0, 1, 0);
+        val game = new Game(new Participants(new Home("Canada"), new Away("Mexico")), new ScorePair(0, 1), 0);
 
         val pairScore = PairScore.fromGame(game);
 

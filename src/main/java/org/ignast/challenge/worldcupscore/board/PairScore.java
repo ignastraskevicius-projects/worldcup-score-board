@@ -8,13 +8,13 @@ public record PairScore(@NonNull Home homeTeam, int homeScore, @NonNull Away awa
         val participants = game.getParticipants();
         return new PairScore(
             participants.homeTeam(),
-            game.getHomeScore(),
+            game.getScorePair().home(),
             participants.awayTeam(),
-            game.getAwayScore()
+            game.getScorePair().away()
         );
     }
 
     Game toGame() {
-        return new Game(new Participants(homeTeam, awayTeam), homeScore, awayScore, 0);
+        return new Game(new Participants(homeTeam, awayTeam), new ScorePair(homeScore, awayScore), 0);
     }
 }
