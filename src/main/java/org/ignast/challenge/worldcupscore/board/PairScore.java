@@ -15,6 +15,6 @@ public record PairScore(@NonNull Home homeTeam, int homeScore, @NonNull Away awa
     }
 
     Game toGame() {
-        return new Game(new Participants(homeTeam, awayTeam), homeScore, awayScore);
+        return new Game(new Participants(homeTeam, awayTeam), homeScore, awayScore, 0);
     }
 }

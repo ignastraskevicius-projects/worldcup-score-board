@@ -14,8 +14,10 @@ public class WorldCupScoreBoard {
         .reversed();
     private ArrayList<Game> gamesInProgress = new ArrayList<>();
 
+    private final Game.Factory games = new Game.Factory();
+
     public void startGame(final Home homeTeam, final Away awayTeam) {
-        val gameToBeAdded = Game.create(homeTeam, awayTeam);
+        val gameToBeAdded = games.create(homeTeam, awayTeam);
         if (!gamesInProgress.contains(gameToBeAdded)) {
             gamesInProgress.add(getIndexPreservingOrder(gameToBeAdded), gameToBeAdded);
         } else {
@@ -35,7 +37,7 @@ public class WorldCupScoreBoard {
     }
 
     public void finishGame(final Home homeTeam, final Away awayTeam) {
-        if (!gamesInProgress.contains(Game.create(homeTeam, awayTeam))) {
+        if (!gamesInProgress.contains(games.create(homeTeam, awayTeam))) {
             throw new IllegalStateException(
                 String.format(
                     "%s-%s game is not in progress and cannot be finished",
@@ -44,7 +46,7 @@ public class WorldCupScoreBoard {
                 )
             );
         } else {
-            gamesInProgress.remove(Game.create(homeTeam, awayTeam));
+            gamesInProgress.remove(games.create(homeTeam, awayTeam));
         }
     }
 
