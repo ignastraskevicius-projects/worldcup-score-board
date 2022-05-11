@@ -5,11 +5,21 @@ import java.util.List;
 
 public class WorldCupScoreBoard {
 
-    public void startGame(Home homeTeam, Away awayTeam) {}
+    private PairScore pairScore;
 
-    public void finishGame(Home homeTeam, Away awayTeam) {}
+    public void startGame(Home homeTeam, Away awayTeam) {
+        pairScore = new PairScore(homeTeam, 0, awayTeam, 0);
+    }
 
-    public List<Void> getSummary() {
-        return new ArrayList<>();
+    public void finishGame(Home homeTeam, Away awayTeam) {
+        pairScore = null;
+    }
+
+    public List<PairScore> getSummary() {
+        if (pairScore != null) {
+            return List.of(pairScore);
+        } else {
+            return new ArrayList<>();
+        }
     }
 }
