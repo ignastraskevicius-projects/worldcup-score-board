@@ -15,8 +15,8 @@ public class WorldCupScoreBoard {
             throw new IllegalArgumentException(
                 String.format(
                     "%s-%s game has already in progress and cannot be started",
-                    pairScore.homeTeam().name(),
-                    pairScore.awayTeam().name()
+                    homeTeam.name(),
+                    awayTeam.name()
                 )
             );
         }
@@ -45,6 +45,19 @@ public class WorldCupScoreBoard {
     }
 
     public void updateScore(final PairScore pairScore) {
-        this.pairScore = pairScore;
+        if (
+            Objects.equals(pairScore.homeTeam(), this.pairScore.homeTeam()) &&
+            Objects.equals(pairScore.awayTeam(), this.pairScore.awayTeam())
+        ) {
+            this.pairScore = pairScore;
+        } else {
+            throw new IllegalArgumentException(
+                String.format(
+                    "%s-%s game is not in progress and cannot have its score updated",
+                    pairScore.homeTeam().name(),
+                    pairScore.awayTeam().name()
+                )
+            );
+        }
     }
 }

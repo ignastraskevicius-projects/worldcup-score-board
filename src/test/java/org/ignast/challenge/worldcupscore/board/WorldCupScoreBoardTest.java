@@ -57,6 +57,17 @@ class WorldCupScoreBoardTest {
     }
 
     @Test
+    public void shouldNotUpdateScoreForNonexistentGame() {
+        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
+
+        assertThatIllegalArgumentException()
+            .isThrownBy(() ->
+                worldCupScoreBoard.updateScore(new PairScore(new Home("Italy"), 2, new Away("Spain"), 1))
+            )
+            .withMessage("Italy-Spain game is not in progress and cannot have its score updated");
+    }
+
+    @Test
     public void shouldNotFinishedGameWhichIsNotInProgress() {
         assertThatExceptionOfType(IllegalStateException.class)
             .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
