@@ -8,8 +8,8 @@ class ParticipantsTest {
 
     @Test
     public void shouldNotBeCreatedWithNulls() {
-        assertThatNullPointerException().isThrownBy(() -> new Participants(null, new Away("Canada")));
-        assertThatNullPointerException().isThrownBy(() -> new Participants(new Home("Canada"), null));
-        new Participants(new Home("Canada"), new Away("Mexico"));
+        assertThatNullPointerException().isThrownBy(() -> new Participants(null, new AwayTeam("Canada")));
+        assertThatNullPointerException().isThrownBy(() -> new Participants(new HomeTeam("Canada"), null));
+        new Participants(new HomeTeam("Canada"), new AwayTeam("Mexico"));
     }
 }

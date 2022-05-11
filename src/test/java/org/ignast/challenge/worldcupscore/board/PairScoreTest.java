@@ -10,29 +10,37 @@ class PairScoreTest {
 
     @Test
     public void shouldNotCreateScoreForNullParticipants() {
-        assertThatNullPointerException().isThrownBy(() -> new PairScore(null, 0, new Away("Mexico"), 1));
-        assertThatNullPointerException().isThrownBy(() -> new PairScore(new Home("Canada"), 0, null, 1));
-        new PairScore(new Home("Canada"), 0, new Away("Mexico"), 1);
+        assertThatNullPointerException().isThrownBy(() -> new PairScore(null, 0, new AwayTeam("Mexico"), 1));
+        assertThatNullPointerException().isThrownBy(() -> new PairScore(new HomeTeam("Canada"), 0, null, 1));
+        new PairScore(new HomeTeam("Canada"), 0, new AwayTeam("Mexico"), 1);
     }
 
     @Test
     public void shouldReconstructGame() {
-        val pairScore = new PairScore(new Home("Canada"), 0, new Away("Mexico"), 1);
+        val pairScore = new PairScore(new HomeTeam("Canada"), 0, new AwayTeam("Mexico"), 1);
 
         val game = pairScore.toGame();
 
         assertThat(game)
             .isEqualTo(
-                new Game(new Participants(new Home("Canada"), new Away("Mexico")), new ScorePair(0, 1), 0)
+                new Game(
+                    new Participants(new HomeTeam("Canada"), new AwayTeam("Mexico")),
+                    new ScorePair(0, 1),
+                    0
+                )
             );
     }
 
     @Test
     public void shouldExtractScoreFromGame() {
-        val game = new Game(new Participants(new Home("Canada"), new Away("Mexico")), new ScorePair(0, 1), 0);
+        val game = new Game(
+            new Participants(new HomeTeam("Canada"), new AwayTeam("Mexico")),
+            new ScorePair(0, 1),
+            0
+        );
 
         val pairScore = PairScore.fromGame(game);
 
-        assertThat(pairScore).isEqualTo(new PairScore(new Home("Canada"), 0, new Away("Mexico"), 1));
+        assertThat(pairScore).isEqualTo(new PairScore(new HomeTeam("Canada"), 0, new AwayTeam("Mexico"), 1));
     }
 }
