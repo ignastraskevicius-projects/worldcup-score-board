@@ -18,7 +18,7 @@ public final class WorldCupScoreBoard {
 
     private final Game.Factory games = new Game.Factory();
 
-    public void startGame(final Home homeTeam, final Away awayTeam) {
+    public void startGame(final HomeTeam homeTeam, final AwayTeam awayTeam) {
         val gameToBeAdded = games.create(homeTeam, awayTeam);
         if (!gamesInProgress.add(gameToBeAdded)) {
             throw new IllegalArgumentException(
@@ -31,7 +31,7 @@ public final class WorldCupScoreBoard {
         }
     }
 
-    public void finishGame(final Home homeTeam, final Away awayTeam) {
+    public void finishGame(final HomeTeam homeTeam, final AwayTeam awayTeam) {
         if (!gamesInProgress.remove(games.create(homeTeam, awayTeam))) {
             throw new IllegalStateException(
                 String.format(

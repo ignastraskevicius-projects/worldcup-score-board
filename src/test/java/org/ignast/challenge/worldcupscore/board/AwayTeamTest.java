@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 import org.junit.jupiter.api.Test;
 
-class HomeTest {
+class AwayTeamTest {
 
     @Test
     public void shouldNotBeCreatedWithNullName() {
-        assertThatNullPointerException().isThrownBy(() -> new Home(null));
-        new Home("Canada");
+        assertThatNullPointerException().isThrownBy(() -> new AwayTeam(null));
+        new AwayTeam("Canada");
     }
 }

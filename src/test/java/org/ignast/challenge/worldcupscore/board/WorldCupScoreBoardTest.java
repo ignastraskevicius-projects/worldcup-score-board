@@ -18,54 +18,65 @@ class WorldCupScoreBoardTest {
 
     @Test
     public void startedGameShouldBeRepresentedInSummary() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
 
         val summary = worldCupScoreBoard.getSummary();
 
         assertThat(summary).hasSize(1);
-        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Mexico"), 0, new Away("Canada"), 0));
+        assertThat(summary.get(0))
+            .isEqualTo(new PairScore(new HomeTeam("Mexico"), 0, new AwayTeam("Canada"), 0));
     }
 
     @Test
     public void summaryShouldBeProvidedInDescendingTotalScoreOrder() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
-        worldCupScoreBoard.startGame(new Home("Germany"), new Away("Lithuania"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Germany"), 4, new Away("Lithuania"), 2));
-        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Spain"), 1, new Away("Italy"), 3));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
+        worldCupScoreBoard.updateScore(new PairScore(new HomeTeam("Mexico"), 2, new AwayTeam("Canada"), 1));
+        worldCupScoreBoard.startGame(new HomeTeam("Germany"), new AwayTeam("Lithuania"));
+        worldCupScoreBoard.updateScore(
+            new PairScore(new HomeTeam("Germany"), 4, new AwayTeam("Lithuania"), 2)
+        );
+        worldCupScoreBoard.startGame(new HomeTeam("Spain"), new AwayTeam("Italy"));
+        worldCupScoreBoard.updateScore(new PairScore(new HomeTeam("Spain"), 1, new AwayTeam("Italy"), 3));
 
         val summary = worldCupScoreBoard.getSummary();
 
         assertThat(summary).hasSize(3);
-        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Germany"), 4, new Away("Lithuania"), 2));
-        assertThat(summary.get(1)).isEqualTo(new PairScore(new Home("Spain"), 1, new Away("Italy"), 3));
-        assertThat(summary.get(2)).isEqualTo(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
+        assertThat(summary.get(0))
+            .isEqualTo(new PairScore(new HomeTeam("Germany"), 4, new AwayTeam("Lithuania"), 2));
+        assertThat(summary.get(1))
+            .isEqualTo(new PairScore(new HomeTeam("Spain"), 1, new AwayTeam("Italy"), 3));
+        assertThat(summary.get(2))
+            .isEqualTo(new PairScore(new HomeTeam("Mexico"), 2, new AwayTeam("Canada"), 1));
     }
 
     @Test
     public void summaryShouldBeProvidedInMostRecentlyAddedOrderIfTotalScoreIsTheSame() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
-        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Spain"), 1, new Away("Italy"), 2));
-        worldCupScoreBoard.startGame(new Home("Germany"), new Away("Lithuania"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Germany"), 3, new Away("Lithuania"), 0));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
+        worldCupScoreBoard.updateScore(new PairScore(new HomeTeam("Mexico"), 2, new AwayTeam("Canada"), 1));
+        worldCupScoreBoard.startGame(new HomeTeam("Spain"), new AwayTeam("Italy"));
+        worldCupScoreBoard.updateScore(new PairScore(new HomeTeam("Spain"), 1, new AwayTeam("Italy"), 2));
+        worldCupScoreBoard.startGame(new HomeTeam("Germany"), new AwayTeam("Lithuania"));
+        worldCupScoreBoard.updateScore(
+            new PairScore(new HomeTeam("Germany"), 3, new AwayTeam("Lithuania"), 0)
+        );
 
         val summary = worldCupScoreBoard.getSummary();
 
         assertThat(summary).hasSize(3);
-        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Germany"), 3, new Away("Lithuania"), 0));
-        assertThat(summary.get(1)).isEqualTo(new PairScore(new Home("Spain"), 1, new Away("Italy"), 2));
-        assertThat(summary.get(2)).isEqualTo(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
+        assertThat(summary.get(0))
+            .isEqualTo(new PairScore(new HomeTeam("Germany"), 3, new AwayTeam("Lithuania"), 0));
+        assertThat(summary.get(1))
+            .isEqualTo(new PairScore(new HomeTeam("Spain"), 1, new AwayTeam("Italy"), 2));
+        assertThat(summary.get(2))
+            .isEqualTo(new PairScore(new HomeTeam("Mexico"), 2, new AwayTeam("Canada"), 1));
     }
 
     @Test
     public void shouldNotStartDuplicateGame() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
 
         assertThatIllegalArgumentException()
-            .isThrownBy(() -> worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada")))
+            .isThrownBy(() -> worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada")))
             .withMessage("Mexico-Canada game has already in progress and cannot be started");
     }
 
@@ -75,14 +86,14 @@ class WorldCupScoreBoardTest {
             .isThrownBy(() ->
                 worldCupScoreBoard
                     .getSummary()
-                    .add(new PairScore(new Home("Canada"), 0, new Away("Spain"), 1))
+                    .add(new PairScore(new HomeTeam("Canada"), 0, new AwayTeam("Spain"), 1))
             );
     }
 
     @Test
     public void finishedGameShouldNoLongerBeMentionedInTheSummary() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
-        worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada"));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
+        worldCupScoreBoard.finishGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
 
         val summary = worldCupScoreBoard.getSummary();
 
@@ -91,42 +102,46 @@ class WorldCupScoreBoardTest {
 
     @Test
     public void shouldContinueSummarisingGamesInProgressAfterSomeOfThemFinish() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
-        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
-        worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada"));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
+        worldCupScoreBoard.startGame(new HomeTeam("Spain"), new AwayTeam("Italy"));
+        worldCupScoreBoard.finishGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
 
         val summary = worldCupScoreBoard.getSummary();
 
         assertThat(summary).hasSize(1);
-        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Spain"), 0, new Away("Italy"), 0));
+        assertThat(summary.get(0))
+            .isEqualTo(new PairScore(new HomeTeam("Spain"), 0, new AwayTeam("Italy"), 0));
     }
 
     @Test
     public void shouldNotAllowToFinishNotExistentGameWhenThereAreUnrelatedGamesInProgress() {
-        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
+        worldCupScoreBoard.startGame(new HomeTeam("Spain"), new AwayTeam("Italy"));
         assertThatExceptionOfType(IllegalStateException.class)
-            .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
+            .isThrownBy(() -> worldCupScoreBoard.finishGame(new HomeTeam("Mexico"), new AwayTeam("Canada")))
             .withMessage("Mexico-Canada game is not in progress and cannot be finished");
     }
 
     @Test
     public void startedGameShouldBeAbleToGetItsScoreChanged() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
+        worldCupScoreBoard.updateScore(new PairScore(new HomeTeam("Mexico"), 2, new AwayTeam("Canada"), 1));
 
         val summary = worldCupScoreBoard.getSummary();
 
         assertThat(summary).hasSize(1);
-        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
+        assertThat(summary.get(0))
+            .isEqualTo(new PairScore(new HomeTeam("Mexico"), 2, new AwayTeam("Canada"), 1));
     }
 
     @Test
     public void shouldNotUpdateScoreForNonexistentGame() {
-        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
 
         assertThatIllegalArgumentException()
             .isThrownBy(() ->
-                worldCupScoreBoard.updateScore(new PairScore(new Home("Italy"), 2, new Away("Spain"), 1))
+                worldCupScoreBoard.updateScore(
+                    new PairScore(new HomeTeam("Italy"), 2, new AwayTeam("Spain"), 1)
+                )
             )
             .withMessage("Italy-Spain game is not in progress and cannot have its score updated");
     }
@@ -134,7 +149,7 @@ class WorldCupScoreBoardTest {
     @Test
     public void shouldNotFinishedGameWhichIsNotInProgress() {
         assertThatExceptionOfType(IllegalStateException.class)
-            .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
+            .isThrownBy(() -> worldCupScoreBoard.finishGame(new HomeTeam("Mexico"), new AwayTeam("Canada")))
             .withMessage("Mexico-Canada game is not in progress and cannot be finished");
     }
 }

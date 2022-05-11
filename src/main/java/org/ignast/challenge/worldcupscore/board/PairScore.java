@@ -3,7 +3,12 @@ package org.ignast.challenge.worldcupscore.board;
 import lombok.NonNull;
 import lombok.val;
 
-public record PairScore(@NonNull Home homeTeam, int homeScore, @NonNull Away awayTeam, int awayScore) {
+public record PairScore(
+    @NonNull HomeTeam homeTeam,
+    int homeScore,
+    @NonNull AwayTeam awayTeam,
+    int awayScore
+) {
     static PairScore fromGame(final Game game) {
         val participants = game.getParticipants();
         return new PairScore(

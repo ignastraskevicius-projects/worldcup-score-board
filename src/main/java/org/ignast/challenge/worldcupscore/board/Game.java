@@ -28,7 +28,7 @@ final class Game {
 
         private int creationOrder = 0;
 
-        public Game create(final Home homeTeam, final Away awayTeam) {
+        public Game create(final HomeTeam homeTeam, final AwayTeam awayTeam) {
             return new Game(new Participants(homeTeam, awayTeam), new ScorePair(0, 0), creationOrder++);
         }
     }
