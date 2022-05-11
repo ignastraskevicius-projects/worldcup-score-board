@@ -17,17 +17,15 @@ class SortedArraySet<T> {
     }
 
     boolean add(T e) {
-        if (!array.contains(e)) {
+        val isNewElement = !array.contains(e);
+        if (isNewElement) {
             array.add(getIndexForInsertionPreservingOrder(e), e);
-            return true;
-        } else {
-            return false;
         }
+        return isNewElement;
     }
 
     boolean remove(Object e) {
-        val removed = array.remove(e);
-        return removed;
+        return array.remove(e);
     }
 
     Stream<T> stream() {
