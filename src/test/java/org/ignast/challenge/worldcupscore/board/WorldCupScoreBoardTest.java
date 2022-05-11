@@ -77,7 +77,7 @@ class WorldCupScoreBoardTest {
 
         assertThatIllegalArgumentException()
             .isThrownBy(() -> worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada")))
-            .withMessage("Mexico-Canada game has already in progress and cannot be started");
+            .withMessage("Mexico-Canada game has already started");
     }
 
     @Test
@@ -116,9 +116,9 @@ class WorldCupScoreBoardTest {
     @Test
     public void shouldNotAllowToFinishNotExistentGameWhenThereAreUnrelatedGamesInProgress() {
         worldCupScoreBoard.startGame(new HomeTeam("Spain"), new AwayTeam("Italy"));
-        assertThatExceptionOfType(IllegalStateException.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> worldCupScoreBoard.finishGame(new HomeTeam("Mexico"), new AwayTeam("Canada")))
-            .withMessage("Mexico-Canada game is not in progress and cannot be finished");
+            .withMessage("Mexico-Canada game was not found");
     }
 
     @Test
@@ -143,13 +143,13 @@ class WorldCupScoreBoardTest {
                     new PairScore(new HomeTeam("Italy"), 2, new AwayTeam("Spain"), 1)
                 )
             )
-            .withMessage("Italy-Spain game is not in progress and cannot have its score updated");
+            .withMessage("Italy-Spain game was not found");
     }
 
     @Test
     public void shouldNotFinishedGameWhichIsNotInProgress() {
-        assertThatExceptionOfType(IllegalStateException.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> worldCupScoreBoard.finishGame(new HomeTeam("Mexico"), new AwayTeam("Canada")))
-            .withMessage("Mexico-Canada game is not in progress and cannot be finished");
+            .withMessage("Mexico-Canada game was not found");
     }
 }
