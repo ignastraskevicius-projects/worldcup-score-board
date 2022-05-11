@@ -15,8 +15,8 @@ final class Game {
     @EqualsAndHashCode.Include
     private final Participants participants;
 
-    private final int homeScore;
-    private final int awayScore;
+    @NonNull
+    private final ScorePair scorePair;
 
     private final int creationOrder;
 
@@ -25,7 +25,7 @@ final class Game {
         private int creationOrder = 0;
 
         public Game create(final Home homeTeam, final Away awayTeam) {
-            return new Game(new Participants(homeTeam, awayTeam), 0, 0, creationOrder++);
+            return new Game(new Participants(homeTeam, awayTeam), new ScorePair(0, 0), creationOrder++);
         }
     }
 }
