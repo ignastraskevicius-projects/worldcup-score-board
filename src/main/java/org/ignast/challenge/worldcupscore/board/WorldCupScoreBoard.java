@@ -15,7 +15,7 @@ public class WorldCupScoreBoard {
     private ArrayList<Game> gamesInProgress = new ArrayList<>();
 
     public void startGame(final Home homeTeam, final Away awayTeam) {
-        val gameToBeAdded = new Game(new Participants(homeTeam, awayTeam), 0, 0);
+        val gameToBeAdded = Game.create(homeTeam, awayTeam);
         if (!gamesInProgress.contains(gameToBeAdded)) {
             gamesInProgress.add(getIndexPreservingOrder(gameToBeAdded), gameToBeAdded);
         } else {
@@ -35,7 +35,7 @@ public class WorldCupScoreBoard {
     }
 
     public void finishGame(final Home homeTeam, final Away awayTeam) {
-        if (!gamesInProgress.contains(new Game(new Participants(homeTeam, awayTeam), 0, 0))) {
+        if (!gamesInProgress.contains(Game.create(homeTeam, awayTeam))) {
             throw new IllegalStateException(
                 String.format(
                     "%s-%s game is not in progress and cannot be finished",
@@ -44,7 +44,7 @@ public class WorldCupScoreBoard {
                 )
             );
         } else {
-            gamesInProgress.remove(new Game(new Participants(homeTeam, awayTeam), 0, 0));
+            gamesInProgress.remove(Game.create(homeTeam, awayTeam));
         }
     }
 

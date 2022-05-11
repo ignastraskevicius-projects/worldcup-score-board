@@ -78,8 +78,8 @@ class WorldCupScoreBoardTest {
     public void shouldNotAllowToFinishNotExistentGameWhenThereAreUnrelatedGamesInProgress() {
         worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
         assertThatExceptionOfType(IllegalStateException.class)
-                .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
-                .withMessage("Mexico-Canada game is not in progress and cannot be finished");
+            .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
+            .withMessage("Mexico-Canada game is not in progress and cannot be finished");
     }
 
     @Test
