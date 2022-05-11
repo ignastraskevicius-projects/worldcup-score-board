@@ -44,7 +44,7 @@ public final class WorldCupScoreBoard {
     }
 
     public List<PairScore> getSummary() {
-        return gamesInProgress.stream().map(PairScore::fromGame).collect(Collectors.toList());
+        return gamesInProgress.stream().map(PairScore::fromGame).collect(Collectors.toUnmodifiableList());
     }
 
     public void updateScore(final PairScore pairScore) {

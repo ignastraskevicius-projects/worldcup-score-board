@@ -70,6 +70,16 @@ class WorldCupScoreBoardTest {
     }
 
     @Test
+    public void summaryShouldBeImmutable() {
+        assertThatExceptionOfType(UnsupportedOperationException.class)
+            .isThrownBy(() ->
+                worldCupScoreBoard
+                    .getSummary()
+                    .add(new PairScore(new Home("Canada"), 0, new Away("Spain"), 1))
+            );
+    }
+
+    @Test
     public void finishedGameShouldNoLongerBeMentionedInTheSummary() {
         worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
         worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada"));
