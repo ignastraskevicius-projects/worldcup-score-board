@@ -31,8 +31,7 @@ public class WorldCupScoreBoard {
 
     private int getIndexPreservingOrder(Game gameToBeAdded) {
         val index = Collections.binarySearch(gamesInProgress, gameToBeAdded, BY_TOTAL_SCORE_DESCENDING);
-        int index1 = -(index) - 1;
-        return index1;
+        return index >= 0 ? index : -(index) - 1;
     }
 
     public void finishGame(final Home homeTeam, final Away awayTeam) {
@@ -45,7 +44,7 @@ public class WorldCupScoreBoard {
                 )
             );
         } else {
-            gamesInProgress = new ArrayList<>();
+            gamesInProgress.remove(new Game(new Participants(homeTeam, awayTeam), 0, 0));
         }
     }
 
