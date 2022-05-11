@@ -1,3 +1,9 @@
 package org.ignast.challenge.worldcupscore.board;
 
-public record PairScore(Home homeTeam, int homeScore, Away awayTeam, int awayScore) {}
+import lombok.NonNull;
+
+public record PairScore(@NonNull Home homeTeam, int homeScore, @NonNull Away awayTeam, int awayScore) {
+    Game toGame() {
+        return new Game(new Participants(homeTeam, awayTeam), homeScore, awayScore);
+    }
+}
