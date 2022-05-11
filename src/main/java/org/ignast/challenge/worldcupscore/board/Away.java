@@ -1,3 +1,3 @@
 package org.ignast.challenge.worldcupscore.board;
 
-public record Away(String country) {}
+public record Away(String name) {}

@@ -1,6 +1,7 @@
 package org.ignast.challenge.worldcupscore.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import lombok.val;
@@ -31,7 +32,7 @@ class WorldCupScoreBoardTest {
 
         assertThatIllegalArgumentException()
             .isThrownBy(() -> worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada")))
-            .withMessage("Mexico-Canada game has already started");
+            .withMessage("Mexico-Canada game has already in progress and cannot be started");
     }
 
     @Test
@@ -42,5 +43,12 @@ class WorldCupScoreBoardTest {
         val summary = worldCupScoreBoard.getSummary();
 
         assertThat(summary).isEmpty();
+    }
+
+    @Test
+    public void shouldNotFinishedGameWhichIsNotInProgress() {
+        assertThatExceptionOfType(IllegalStateException.class)
+            .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
+            .withMessage("Mexico-Canada game is not in progress and cannot be finished");
     }
 }
