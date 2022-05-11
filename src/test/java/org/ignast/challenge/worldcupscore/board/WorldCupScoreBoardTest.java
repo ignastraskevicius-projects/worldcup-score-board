@@ -46,6 +46,17 @@ class WorldCupScoreBoardTest {
     }
 
     @Test
+    public void startedGameShouldBeAbleToGetItsScoreChanged() {
+        worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
+        worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
+
+        val summary = worldCupScoreBoard.getSummary();
+
+        assertThat(summary).hasSize(1);
+        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
+    }
+
+    @Test
     public void shouldNotFinishedGameWhichIsNotInProgress() {
         assertThatExceptionOfType(IllegalStateException.class)
             .isThrownBy(() -> worldCupScoreBoard.finishGame(new Home("Mexico"), new Away("Canada")))
