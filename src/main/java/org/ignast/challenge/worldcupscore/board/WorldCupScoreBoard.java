@@ -8,7 +8,17 @@ public class WorldCupScoreBoard {
     private PairScore pairScore;
 
     public void startGame(Home homeTeam, Away awayTeam) {
-        pairScore = new PairScore(homeTeam, 0, awayTeam, 0);
+        if (pairScore == null) {
+            pairScore = new PairScore(homeTeam, 0, awayTeam, 0);
+        } else {
+            throw new IllegalArgumentException(
+                String.format(
+                    "%s-%s game has already started",
+                    pairScore.homeTeam().name(),
+                    pairScore.awayTeam().country()
+                )
+            );
+        }
     }
 
     public void finishGame(Home homeTeam, Away awayTeam) {
