@@ -2,15 +2,17 @@ package org.ignast.challenge.worldcupscore.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+
 import lombok.val;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 class GameTest {
+
     @Test
     public void gameShouldNotBeCreatedWithNullParticipants() {
-        assertThatNullPointerException().isThrownBy(() -> new Game(null, 1 , 2));
-        new Game(new Participants(new Home("Canada"), new Away("Spain")), 1 , 2);
+        assertThatNullPointerException().isThrownBy(() -> new Game(null, 1, 2));
+        new Game(new Participants(new Home("Canada"), new Away("Spain")), 1, 2);
     }
 
     @Test
@@ -31,7 +33,7 @@ class GameTest {
 
     @Test
     public void gameShouldPreserveItsData() {
-        val game = new Game(new Participants(new Home("Canada"), new Away("Spain")), 1 , 2);
+        val game = new Game(new Participants(new Home("Canada"), new Away("Spain")), 1, 2);
 
         assertThat(game.getParticipants()).isEqualTo(new Participants(new Home("Canada"), new Away("Spain")));
         assertThat(game.getHomeScore()).isEqualTo(1);

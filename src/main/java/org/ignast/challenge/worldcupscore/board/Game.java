@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 @Getter(AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 final class Game {
+
     @NonNull
     @EqualsAndHashCode.Include
     private final Participants participants;
+
     private final int homeScore;
     private final int awayScore;
 }
