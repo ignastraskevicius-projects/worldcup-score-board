@@ -1,7 +1,5 @@
 package org.ignast.challenge.worldcupscore.board;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,13 +7,13 @@ import lombok.val;
 
 public final class WorldCupScoreBoard {
 
-    private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING_AND_CREATION_ORDER = Comparator
+    private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING_AND_LATEST_CREATED_FIRST = Comparator
         .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
-        .reversed()
-        .thenComparing(Game::getCreationOrder);
+        .thenComparing(Game::getCreationOrder)
+        .reversed();
 
     private final SortedArraySet<Game> gamesInProgress = new SortedArraySet<>(
-        BY_TOTAL_SCORE_DESCENDING_AND_CREATION_ORDER
+        BY_TOTAL_SCORE_DESCENDING_AND_LATEST_CREATED_FIRST
     );
 
     private final Game.Factory games = new Game.Factory();

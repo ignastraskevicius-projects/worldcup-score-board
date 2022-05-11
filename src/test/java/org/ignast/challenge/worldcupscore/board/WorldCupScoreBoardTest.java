@@ -30,10 +30,10 @@ class WorldCupScoreBoardTest {
     public void summaryShouldBeProvidedInDescendingTotalScoreOrder() {
         worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
         worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
-        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
-        worldCupScoreBoard.updateScore(new PairScore(new Home("Spain"), 1, new Away("Italy"), 3));
         worldCupScoreBoard.startGame(new Home("Germany"), new Away("Lithuania"));
         worldCupScoreBoard.updateScore(new PairScore(new Home("Germany"), 4, new Away("Lithuania"), 2));
+        worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
+        worldCupScoreBoard.updateScore(new PairScore(new Home("Spain"), 1, new Away("Italy"), 3));
 
         val summary = worldCupScoreBoard.getSummary();
 
@@ -44,7 +44,7 @@ class WorldCupScoreBoardTest {
     }
 
     @Test
-    public void summaryShouldBeProvidedInStartingOrderIfTotalScoreIsTheSame() {
+    public void summaryShouldBeProvidedInMostRecentlyAddedOrderIfTotalScoreIsTheSame() {
         worldCupScoreBoard.startGame(new Home("Mexico"), new Away("Canada"));
         worldCupScoreBoard.updateScore(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
         worldCupScoreBoard.startGame(new Home("Spain"), new Away("Italy"));
@@ -55,9 +55,9 @@ class WorldCupScoreBoardTest {
         val summary = worldCupScoreBoard.getSummary();
 
         assertThat(summary).hasSize(3);
-        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
+        assertThat(summary.get(0)).isEqualTo(new PairScore(new Home("Germany"), 3, new Away("Lithuania"), 0));
         assertThat(summary.get(1)).isEqualTo(new PairScore(new Home("Spain"), 1, new Away("Italy"), 2));
-        assertThat(summary.get(2)).isEqualTo(new PairScore(new Home("Germany"), 3, new Away("Lithuania"), 0));
+        assertThat(summary.get(2)).isEqualTo(new PairScore(new Home("Mexico"), 2, new Away("Canada"), 1));
     }
 
     @Test
