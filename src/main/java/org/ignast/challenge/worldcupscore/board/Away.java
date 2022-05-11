@@ -1,3 +1,5 @@
 package org.ignast.challenge.worldcupscore.board;
 
-public record Away(String name) {}
+import lombok.NonNull;
+
+public record Away(@NonNull String name) {}
