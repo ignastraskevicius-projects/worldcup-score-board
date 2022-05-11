@@ -18,7 +18,14 @@ final class Game {
     private final int homeScore;
     private final int awayScore;
 
-    public static Game create(final Home homeTeam, final Away awayTeam) {
-        return new Game(new Participants(homeTeam, awayTeam), 0, 0);
+    private final int creationOrder;
+
+    static class Factory {
+
+        private int creationOrder = 0;
+
+        public Game create(final Home homeTeam, final Away awayTeam) {
+            return new Game(new Participants(homeTeam, awayTeam), 0, 0, creationOrder++);
+        }
     }
 }
