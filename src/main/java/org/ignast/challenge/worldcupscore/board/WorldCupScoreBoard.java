@@ -9,11 +9,6 @@ import lombok.val;
 
 public class WorldCupScoreBoard {
 
-    private static final Comparator<Game> BY_TOTAL_SCORE_DESCENDING = Comparator
-        .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
-        .reversed()
-        .thenComparing(Game::getCreationOrder);
-
     private ArrayList<Game> gamesInProgress = new ArrayList<>();
 
     private final Game.Factory games = new Game.Factory();
@@ -33,13 +28,10 @@ public class WorldCupScoreBoard {
         }
     }
 
-    private int getIndexPreservingOrder(Game gameToBeAdded) {
-        val index = Collections.binarySearch(gamesInProgress, gameToBeAdded, BY_TOTAL_SCORE_DESCENDING);
-        return index >= 0 ? index : -(index) - 1;
-    }
-
     public void finishGame(final Home homeTeam, final Away awayTeam) {
-        if (!gamesInProgress.contains(games.create(homeTeam, awayTeam))) {
+        if (gamesInProgress.contains(games.create(homeTeam, awayTeam))) {
+            gamesInProgress.remove(games.create(homeTeam, awayTeam));
+        } else {
             throw new IllegalStateException(
                 String.format(
                     "%s-%s game is not in progress and cannot be finished",
@@ -47,8 +39,6 @@ public class WorldCupScoreBoard {
                     awayTeam.name()
                 )
             );
-        } else {
-            gamesInProgress.remove(games.create(homeTeam, awayTeam));
         }
     }
 
@@ -79,5 +69,20 @@ public class WorldCupScoreBoard {
                     );
                 }
             );
+    }
+
+    private int getIndexPreservingOrder(Game gameToBeAdded) {
+        val byTotalScoreDescendingAndCreationOrder = Comparator
+            .<Game, Integer>comparing(g -> g.getScorePair().home() + g.getScorePair().away())
+            .reversed()
+            .thenComparing(Game::getCreationOrder);
+
+        val index = Collections.binarySearch(
+            gamesInProgress,
+            gameToBeAdded,
+            byTotalScoreDescendingAndCreationOrder
+        );
+        int fromBinarySearchNotFoundToIndex = -(index) - 1;
+        return index >= 0 ? index : fromBinarySearchNotFoundToIndex;
     }
 }
