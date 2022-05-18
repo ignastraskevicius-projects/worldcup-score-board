@@ -45,14 +45,16 @@ public final class WorldCupScoreBoard {
             .map(g -> g.updateScore(newScore))
             .findFirst()
             .ifPresentOrElse(
-                updatedGame -> {
-                    gamesInProgress.remove(updatedGame);
-                    gamesInProgress.add(updatedGame);
-                },
+                this::updateGameInProgress,
                 () -> {
                     throw gameNotFoundError(pairScore.homeTeam(), pairScore.awayTeam());
                 }
             );
+    }
+
+    private void updateGameInProgress(Game updatedGame) {
+        gamesInProgress.remove(updatedGame);
+        gamesInProgress.add(updatedGame);
     }
 
     private IllegalArgumentException gameIsAlreadyStartedError(HomeTeam homeTeam, AwayTeam awayTeam) {
