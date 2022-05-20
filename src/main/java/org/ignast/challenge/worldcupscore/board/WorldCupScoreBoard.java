@@ -65,10 +65,6 @@ public final class WorldCupScoreBoard {
         return homeScore.or(() -> awayScore).orElseThrow(() -> teamIsOfflineError(teamName));
     }
 
-    private IllegalArgumentException teamIsOfflineError(String teamName) {
-        return new IllegalArgumentException(String.format("Team %s is offline", teamName));
-    }
-
     private Optional<Integer> scanTeamsForScore(String teamName, Function<Participants, Team> teamChoice) {
         return gamesInProgress
             .stream()
@@ -87,6 +83,10 @@ public final class WorldCupScoreBoard {
         } else {
             return g.getScorePair().away();
         }
+    }
+
+    private IllegalArgumentException teamIsOfflineError(String teamName) {
+        return new IllegalArgumentException(String.format("Team %s is offline", teamName));
     }
 
     private IllegalArgumentException gameIsAlreadyStartedError(HomeTeam homeTeam, AwayTeam awayTeam) {
