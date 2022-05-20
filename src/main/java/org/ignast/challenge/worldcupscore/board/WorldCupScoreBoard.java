@@ -60,12 +60,12 @@ public final class WorldCupScoreBoard {
     }
 
     public int getScoreForTeam(String teamName) {
-        val homeScore = scanTeamsForScore(teamName, Participants::homeTeam);
-        val awayScore = scanTeamsForScore(teamName, Participants::awayTeam);
+        val homeScore = scanGamesForTeamScore(teamName, Participants::homeTeam);
+        val awayScore = scanGamesForTeamScore(teamName, Participants::awayTeam);
         return homeScore.or(() -> awayScore).orElseThrow(() -> teamIsOfflineError(teamName));
     }
 
-    private Optional<Integer> scanTeamsForScore(String teamName, Function<Participants, Team> teamChoice) {
+    private Optional<Integer> scanGamesForTeamScore(String teamName, Function<Participants, Team> teamChoice) {
         return gamesInProgress
             .stream()
             .filter(g -> byTeamName(teamName, teamChoice, g))
