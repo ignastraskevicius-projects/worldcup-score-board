@@ -152,4 +152,27 @@ class WorldCupScoreBoardTest {
             .isThrownBy(() -> worldCupScoreBoard.finishGame(new HomeTeam("Mexico"), new AwayTeam("Canada")))
             .withMessage("Mexico-Canada game was not found");
     }
+
+    @Test
+    public void shouldNotReturnScoreForTeamNotCurrentlyPlaying() {
+        assertThatIllegalArgumentException()
+            .isThrownBy(() -> worldCupScoreBoard.getScoreForTeam("Mexico"))
+            .withMessage("Team Mexico is offline");
+    }
+
+    @Test
+    public void shouldReturnScoreForHomeTeam() {
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
+        worldCupScoreBoard.updateScore(new PairScore(new HomeTeam("Mexico"), 1, new AwayTeam("Canada"), 0));
+
+        assertThat(worldCupScoreBoard.getScoreForTeam("Mexico")).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldReturnScoreForAwayTeam() {
+        worldCupScoreBoard.startGame(new HomeTeam("Mexico"), new AwayTeam("Canada"));
+        worldCupScoreBoard.updateScore(new PairScore(new HomeTeam("Mexico"), 0, new AwayTeam("Canada"), 1));
+
+        assertThat(worldCupScoreBoard.getScoreForTeam("Canada")).isEqualTo(1);
+    }
 }

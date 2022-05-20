@@ -2,6 +2,8 @@ package org.ignast.challenge.worldcupscore.board;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.val;
 
@@ -55,6 +57,36 @@ public final class WorldCupScoreBoard {
     private void updateGameInProgress(Game updatedGame) {
         gamesInProgress.remove(updatedGame);
         gamesInProgress.add(updatedGame);
+    }
+
+    public int getScoreForTeam(String teamName) {
+        val homeScore = scanTeamsForScore(teamName, Participants::homeTeam);
+        val awayScore = scanTeamsForScore(teamName, Participants::awayTeam);
+        return homeScore.or(() -> awayScore).orElseThrow(() -> teamIsOfflineError(teamName));
+    }
+
+    private IllegalArgumentException teamIsOfflineError(String teamName) {
+        return new IllegalArgumentException(String.format("Team %s is offline", teamName));
+    }
+
+    private Optional<Integer> scanTeamsForScore(String teamName, Function<Participants, Team> teamChoice) {
+        return gamesInProgress
+            .stream()
+            .filter(g -> byTeamName(teamName, teamChoice, g))
+            .map(g -> toTeamScore(teamChoice, g))
+            .findFirst();
+    }
+
+    private boolean byTeamName(String teamName, Function<Participants, Team> teamChoice, Game g) {
+        return teamChoice.apply(g.getParticipants()).name().equals(teamName);
+    }
+
+    private int toTeamScore(Function<Participants, Team> teamChoice, Game g) {
+        if (teamChoice.apply(g.getParticipants()) instanceof HomeTeam) {
+            return g.getScorePair().home();
+        } else {
+            return g.getScorePair().away();
+        }
     }
 
     private IllegalArgumentException gameIsAlreadyStartedError(HomeTeam homeTeam, AwayTeam awayTeam) {
